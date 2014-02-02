@@ -14,9 +14,21 @@ USE_LANGUAGES=	c c++
 USE_LIBTOOL=	yes
 USE_TOOLS+=	gmake
 GNU_CONFIGURE=	yes
+BUILD_DEPENDS+=	fontconfig>=2.*:../../fonts/fontconfig
+PKG_INSTALLATION_TYPES= overwrite pkgviews
+
+CPPFLAGS+=	-DPREFIX="\"${PREFIX}\""
+CPPFLAGS+=	-DX11BASE="\"${X11BASE}\""
 
 .include "../../mk/bsd.prefs.mk"
 
-CFLAGS+= -O3 -DUSING_GENERATED_CONFIG_H -DNO_SHARED_MEMORY -DSDL_VIDEO_DRIVER_X11_XVIDMODE=1
+CFLAGS+= -O3 -DNO_SHARED_MEMORY -DSDL_VIDEO_DRIVER_X11_XVIDMODE=1
+CONFIGURE_ARGS+= --with-x --enable-video --enable-video-x11 --disable-x11-shared
+
+#.include "../../fonts/fontconfig/buildlink3.mk"
+.include "../../x11/libXext/buildlink3.mk"
+.include "../../x11/libXrandr/buildlink3.mk"
+.include "../../x11/libXt/buildlink3.mk"
+.include "../../x11/xproto/buildlink3.mk"
 
 .include "../../mk/bsd.pkg.mk"
